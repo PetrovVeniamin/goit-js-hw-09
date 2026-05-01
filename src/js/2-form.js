@@ -10,12 +10,16 @@ let formData = {
 const savedData = localStorage.getItem(STORAGE_KEY);
 
 if (savedData) {
-  const parseData = JSON.parse(savedData);
+  try {
+    const parseData = JSON.parse(savedData);
 
-  formData = parseData;
+    formData = parseData;
+  } catch (e) {
+    console.error('Invalid JSON');
+  }
 
-  form.nextElementSibling.email.value = parseData.email || '';
-  form.nextElementSibling.message.value = parseData.message || '';
+  form.elements.email.value = parseData.email || '';
+  form.elements.message.value = parseData.message || '';
 }
 
 form.addEventListener('input', event => {
@@ -33,11 +37,14 @@ form.addEventListener('sumbit', event => {
 
   if (email === '' || message === '') {
     alert('Fill please all fiels');
+    return;
   }
 
   console.log(formData);
 
+  form.reset();
+
   localStorage.removeItem(STORAGE_KEY);
-  form.requestFullscreen();
+
   formData = { email: '', message: '' };
 });
