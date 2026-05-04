@@ -10,16 +10,19 @@ let formData = {
 const savedData = localStorage.getItem(STORAGE_KEY);
 
 if (savedData) {
+  let parseData;
   try {
-    const parseData = JSON.parse(savedData);
+    parseData = JSON.parse(savedData);
 
     formData = parseData;
   } catch (e) {
     console.error('Invalid JSON');
   }
+  if (parseData) {
+    form.elements.email.value = parseData.email || '';
 
-  form.elements.email.value = parseData.email || '';
-  form.elements.message.value = parseData.message || '';
+    form.elements.message.value = parseData.message || '';
+  }
 }
 
 form.addEventListener('input', event => {
@@ -30,7 +33,7 @@ form.addEventListener('input', event => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 });
 
-form.addEventListener('sumbit', event => {
+form.addEventListener('submit', event => {
   event.preventDefault();
 
   const { email, message } = formData;
